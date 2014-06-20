@@ -43,8 +43,7 @@ void MainWindow::fileDlg2()
 void MainWindow::fileDlg3()
 {
     //blockspreading();
-    //ui->ed3->setText("BITCH");
-    //bitch();
+    //ui->ed3->setText("asd");
     static int inlen;
     QByteArray *in, *out, *buf;
     //byte *in, *out, *buf;
