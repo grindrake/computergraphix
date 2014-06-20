@@ -20,6 +20,7 @@ private:
 public slots:
     void fileDlg();
     void fileDlg2();
+    void fileDlg3();
 };
 
 #endif // MAINWINDOW_H
