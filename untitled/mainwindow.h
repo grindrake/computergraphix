@@ -17,10 +17,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    //QAction *saveAction;
 public slots:
     void fileDlg();
     void fileDlg2();
     void fileDlg3();
+    //void fileDlg4();
 };
 
 #endif // MAINWINDOW_H

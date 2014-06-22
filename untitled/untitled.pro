@@ -14,7 +14,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    blockspreading.cpp \
     CryptoPP/3way.cpp \
     CryptoPP/adler32.cpp \
     CryptoPP/algebra.cpp \
@@ -286,7 +285,6 @@ HEADERS  += mainwindow.h \
     CryptoPP/zdeflate.h \
     CryptoPP/zinflate.h \
     CryptoPP/zlib.h \
-    blockspreading.h \
     bitch.h
 
 FORMS    += mainwindow.ui
