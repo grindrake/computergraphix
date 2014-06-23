@@ -15,10 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(fileDlg()));
     QObject::connect(ui->pushButton_5, SIGNAL(clicked()), this, SLOT(fileDlg2()));
     QObject::connect(ui->pushButton_2, SIGNAL(clicked()), this, SLOT(fileDlg3()));
-   // QObject::connect(ui->pushButton_5, SIGNAL(clicked()), this, SLOT(fileDlg4()));
 }
 
 
@@ -27,17 +25,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::fileDlg()
+void MainWindow::fileDlg2()
 {
     fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                      "",
                                                      tr("Files (*.*)"));
-    ui->label_2->setText(fileName);
-}
-
-void MainWindow::fileDlg2()
-{
-    QFile file("tex.txt");
+    QFile file(fileName);
     file.open(QIODevice::WriteOnly);
     if (!file.open(QIODevice::WriteOnly))
        ui->textEdit->setText("omg");
@@ -70,7 +63,10 @@ void MainWindow::fileDlg2()
 
 void MainWindow::fileDlg3()
 {
-    QFile file("tex.txt");
+    fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                     "",
+                                                     tr("Files (*.*)"));
+    QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly))
         return;
     test = file.readAll();

@@ -1,1 +1,1 @@
-16byteherehere><14byteherehere
+GOST sypher OFB mode
