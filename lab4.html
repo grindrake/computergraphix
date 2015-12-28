@@ -1,0 +1,266 @@
+<html>
+<head/>
+<body>
+<h1>Лабораторная работа "Преобразования фигур"</h1>
+<p>Для многоугольника выполнить преобразование сдвига, поворота и маштабирования, осуществляемые по нажатию соответствующей кнопки интерфейса.</p>
+
+
+<script>
+	function abs(a) 
+	{
+		if (a>=0) return a;
+		else return -1*a;
+	}
+	function line1(ctx, a0, b0, a1, b1, or1) 
+	{
+		var delta = 0;
+		var y = 0;
+		for (x = 0; x<(a1-a0); x++) 
+		{
+			if (delta>=(a1-a0)) 
+			{
+				y++;
+				delta-=2*(a1-a0);	
+			}
+			delta+=2*or1*(b1-b0);
+			ctx.fillRect(a0+x, b0+or1*y, 1, 1);
+		}
+	}
+	function line2(ctx, a0, b0, a1, b1, or1) 
+	{
+		var delta = 0;
+		var x = 0;
+		for (y = 0; y<(b1-b0); y++) 
+		{
+			if (delta>=(b1-b0)) 
+			{
+				x++;
+				delta-=2*(b1-b0);	
+			}
+			delta+=2*or1*(a1-a0);
+			ctx.fillRect(a0+or1*x, b0+y, 1, 1);
+		}
+	}
+	function draw_line(ctx, x0, y0, x1, y1) 
+	{
+		var a0, b0, a1, b1;
+		if (abs(x1-x0)>abs(y1-y0)) 
+		{
+			if (x0<x1) { a0=x0; b0=y0; a1=x1; b1=y1;
+		}
+			else 
+			{
+				 a0=x1; b0=y1; a1=x0; b1=y0;
+			}
+			if (b1>=b0) line1(ctx, a0, b0, a1, b1, 1);
+			else line1(ctx, a0, b0, a1, b1, -1);
+		} 
+		else 
+		{
+			if (y0<y1) 
+			{
+				 a0=x0; b0=y0; a1=x1; b1=y1;
+			}
+			else 
+			{
+				 a0=x1; b0=y1; a1=x0; b1=y0;
+			}
+			if (a1>=a0) line2(ctx, a0, b0, a1, b1, 1);
+			else 
+			{
+				line2(ctx, a0, b0, a1, b1, -1);
+			}
+		}
+	}
+	function xandsum (D1, R1, U1, L1, D2, R2, U2, L2)
+	{
+		return D1*D2+R1*R2+U1*U2+L1*L2;
+	}
+
+	function MultiplyMatrix(A,B)
+	{
+  		var rowsA = 3, colsA=1, rowsB = 3, colsB=3;
+		var C = [0,0,0];
+		C[0]=A[0]*B[0][0]+A[1]*B[1][0]+A[2]*B[2][0];
+		C[1]=A[0]*B[0][1]+A[1]*B[1][1]+A[2]*B[2][1];
+		C[2]=A[0]*B[0][2]+A[1]*B[1][2]+A[2]*B[2][2];
+		return C;
+	}
+
+	function DrawPoly(ctx, X, Y, N, Style)
+	{
+		ctx.fillStyle = Style;
+		for (i=0; i<N; i++)
+		{
+			draw_line(ctx, X[i], Y[i], X[i+1], Y[i+1]);
+			if (i==N-1) draw_line(ctx, X[i], Y[i], X[0], Y[0]);
+		}	
+	}
+	function Redir (Direction)
+	{
+		Direction++;
+		if (Direction>3) Direction-=4;
+		return Direction;
+	}
+	/*function ClearScr (ctx)
+	{
+		alert('qq');
+		ctx.fillStyle="#FFFFFF";
+		ctx.fillRect(0,0,ctx.width,ctx.height);
+	}*/
+	function ReZoom (Z)
+	{
+		//alert (Z);
+		if (Z<1) Z=Z*4;
+		else Z=Z/4;
+		return Z;
+	}
+</script>
+<canvas id='less04' width='500' height='500'>
+<script>
+	var canvas = document.getElementById('less04');
+	var ctx = canvas.getContext('2d');
+
+	var N=6;
+	var X=[120, 200, 240, 200, 120, 80];
+	var Y=[40, 40, 110, 180, 180, 110];
+
+
+	var i=0, j=0;
+	var Dir=0;
+	var Mode=0;
+	var CentX=160, CentY=110, Scale=0.5;
+
+	var MoveR=[[1,0,0],[0,1,0],[75,0,1]];
+	var MoveD=[[1,0,0],[0,1,0],[0,75,1]];
+	var MoveL=[[1,0,0],[0,1,0],[-75,0,1]];
+	var MoveU=[[1,0,0],[0,1,0],[0,-75,1]];
+	var MoveC1=[[1,0,0],[0,1,0],[-1*CentX,-1*CentY,1]];
+	var MoveC2=[[1,0,0],[0,1,0],[CentX,CentY,1]];
+	var Zoom1=[[0.5,0,0],[0,0.5,0],[0,0,0.5]];
+	var Zoom2=[[2,0,0],[0,2,0],[0,0,2]];
+	var Rotate30=[[Math.cos(Math.PI/6), Math.sin(Math.PI/6), 0],[-1*Math.sin(Math.PI/6), Math.cos(Math.PI/6), 0],[0, 0, 1]];
+
+
+	DrawPoly(ctx, X, Y, N, "#000000");		
+	
+	function Move()
+	{
+		var B;
+		if (Dir==0)
+		{
+			B=MoveR;
+			//CentX+=75;
+			MoveC1[2][0]-=75;
+			MoveC2[2][0]+=75;
+		}
+		if (Dir==1)
+		{ 
+			B=MoveD;
+			//CentY+=75;
+			MoveC1[2][1]-=75;
+			MoveC2[2][1]+=75;
+		}
+		if (Dir==2) 
+		{
+			B=MoveL;
+			//CentX-=75;
+			MoveC1[2][0]+=75;
+			MoveC2[2][0]-=75;
+		}
+		if (Dir==3) 
+		{
+			B=MoveU;
+			//CentY-=75;
+			MoveC1[2][1]+=75;
+			MoveC2[2][1]-=75;
+		}	
+		ctx.fillStyle="#FFFFFF";
+		ctx.fillRect(0,0,500,500);
+		DrawPoly(ctx, X, Y, N, "#FF0000");
+
+		for (i=0; i<N; i++)
+		{
+			var A=[X[i], Y[i], 1];
+			//alert (A);
+			var A1=MultiplyMatrix(A,B);
+			//alert (A1);
+			X[i]=A1[0];
+			Y[i]=A1[1];
+		}
+		DrawPoly(ctx, X, Y, N, "#000000");
+		//ctx.fillRect(CentX,CentY,1,1);
+		Dir=Redir(Dir);
+	}
+	function Rotate()
+	{
+		var B=Rotate30;
+		ctx.fillStyle="#FFFFFF";
+		ctx.fillRect(0,0,500,500);
+		DrawPoly(ctx, X, Y, N, "#00FF00");
+		for (i=0; i<N; i++)
+		{
+			var A=[X[i], Y[i], 1];
+			//alert (A);
+			var A1=MultiplyMatrix(A,MoveC1);
+			var A1=MultiplyMatrix(A1,B);
+			var A1=MultiplyMatrix(A1,MoveC2);
+			//alert (A1);
+			X[i]=A1[0];
+			Y[i]=A1[1];
+		}
+		DrawPoly(ctx, X, Y, N, "#000000");
+		//ctx.fillRect(CentX,CentY,1,1);
+		//alert (CentX+","+CentY);
+
+	}
+	function Zoom()
+	{
+		var B;
+		if(!Mode)
+		{
+			B=Zoom1;
+			Mode=1;
+		}
+		else 
+		{
+			B=Zoom2;
+			Mode=0;
+		}
+		ctx.fillStyle="#FFFFFF";
+		ctx.fillRect(0,0,500,500);
+		DrawPoly(ctx, X, Y, N, "#0000FF");
+		for (i=0; i<N; i++)
+		{
+			var A=[X[i], Y[i], 1];
+			//alert (A);
+			var A1=MultiplyMatrix(A,MoveC1);
+			var A1=MultiplyMatrix(A1,B);
+			var A1=MultiplyMatrix(A1,MoveC2);
+			//alert (A1);
+			X[i]=A1[0];
+			Y[i]=A1[1];
+		}
+		DrawPoly(ctx, X, Y, N, "#000000");
+		//ctx.fillRect(CentX,CentY,1,1);
+		//alert (CentX+", "+CentY);
+		CentX*=Scale;
+		CentY*=Scale;
+		MoveC1[2][0]*=Scale;
+		MoveC2[2][0]*=Scale;
+		MoveC1[2][1]*=Scale;
+		MoveC2[2][1]*=Scale;
+		//alert (CentX+", "+CentY);
+		//ctx.fillRect(CentX,CentY,1,1);
+		Scale=ReZoom(Scale);
+	}
+
+</script>
+</canvas>
+
+<input type='button' onClick='Move()' value='Сдвиг' style='position:absolute; left:10px; top:110px; width:100'/>
+<input type='button' onClick='Rotate()' value='Поворот' style='position:absolute; left:120px; top:110px; width:100'/>
+<input type='button' onClick='Zoom()' value='Масштаб' style='position:absolute; left:230px; top:110px; width:100'/>
+
+</body>
+</html>
