@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>РК-1</title>
+	
+</head>
+<body>
+	<h1>Рубежный контроль №1</h1>
+	<h2>
+		Задание 1. С помощью алгоритма Брезенхема построить отрезок прямой с координатами: A(10, 10) и B(i+20, 100), где i произвольное
+	</h2>
+	<canvas id="canvas1" height="400" width="400"></canvas>
+	<script>
+		var canva = document.getElementById("canvas1");
+		var canv = canva.getContext("2d");
+		var x1=10;
+		var y1=10;
+		var variant=24;
+		var x2=20+variant;
+		var y2=100;
+		
+		var dx = (x2 - x1 >= 0 ? 1 : -1);
+		var dy = (y2 - y1 >= 0 ? 1 : -1);
+		var lengthX = Math.abs(x2 - x1);
+		var lengthY = Math.abs(y2 - y1);
+		var length = Math.max(lengthX, lengthY);
+		if (length == 0) {
+			canv.fillRect(x1, y1, 1, 1);
+		}
+		if (lengthY <= lengthX) {
+			// Начальные значения
+			var x = x1;
+			var y = y1;
+			var d = -lengthX;
+			// Основной цикл
+			length++;
+			while (length--) {
+				canv.fillRect(x, y, 1, 1);
+				x += dx;
+				d += 2 * lengthY;
+				if (d > 0) {
+					d -= 2 * lengthX;
+					y += dy;
+				}
+			}
+		} else {
+			// Начальные значения
+			var x = x1;
+			var y = y1;
+			var d = -lengthY;
+			// Основной цикл
+			length++;
+			while (length--) {
+				canv.fillRect(x, y, 1, 1);
+				y += dy;
+				d += 2 * lengthX;
+				if (d > 0) {
+					d -= 2 * lengthY;
+					x += dx;
+				}
+			}
+		}
+	</script>
+	<h2>
+		Задание 2. Задан массив в переменной array. Необходимо сгруппировать все элементы массива, идущие подряд. Вывести последовательность элементов в скобках (arr_2*i. arr(2*i+1))</br>
+				<p>Input: [1, 2, 10, 20, 21, 22, 31, 35, 45, 46)</br>
+				Output: (1, 2, 10)(20,21, 22, 31)(35,45,46)</p>
+	</h2>
+	<canvas id="canvas2" height="400" width="400"></canvas>
+	<script>
+		var canva = document.getElementById("canvas2");
+		var canv = canva.getContext("2d");
+		var array=[1, 2, 10, 20, 21, 22, 31, 35, 45, 46];
+		var output = ("(" + array[0]);
+		var isCurrentGroupOdd  = false;
+		for (var i = 1; i < array.length; i++){
+			if((array[i] - array[i-1] == 1)){
+				output+= " " + array[i];
+			}
+			else if(isCurrentGroupOdd == false){
+				isCurrentGroupOdd = true;
+				output += " " + array[i];
+			}
+			else if (isCurrentGroupOdd == true){
+				output+= (")(" + array[i]);
+				isCurrentGroupOdd = false;
+			}
+		}
+		output += ")";
+		canv.font = "24px  bold Georgia";
+		canv.fillText(output, 10, 25);
+		
+	</script>
+</body>
+</html>
