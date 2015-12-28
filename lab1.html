@@ -1,0 +1,68 @@
+<html>
+<head/>
+<body>
+<p><h1>С помощью алгоритма Брезенхема построить 11 отрезков прямых с началом в точке (0,0) и тангенсами
+угла от 0 -1 (0,-0.1,-0.2, ... -0.9, -1) </h1></p>
+<canvas id='less01' width='500' height='500'>
+	<script>
+		var canvas=document.getElementById('less01');
+		var ctx=canvas.getContext('2d');
+		var Scale=5;
+		var Length=100;
+		for (tg=0; tg>=-1; tg-=0.1) 
+		{
+			var y=0;
+			for (x=0; x<Length; x++) 
+			{
+				y=-1*tg*x;
+				if (tg%1>=0.5) {y++;}
+				ctx.fillRect(Scale*x, Scale*y, Scale*1, Scale*1);
+			}
+		}
+	</script>
+</canvas>
+
+<p><h1>Построить окружность с задаваемым радиусом с помощью алгоритма Брезенхема
+для окружностей</h1></p>
+<canvas id='less01.1' width='700' height='700'>
+<script>
+	var canvas = document.getElementById('less01.1');
+	var ctx = canvas.getContext('2d');
+	var Scale=8;
+	var x0=50, y0=50;
+	var Rad=31;
+	var x=-1*Rad, y=0;
+	var F=x^2+(y+1)^2+(x+1)^2+(y+1)^2-2*Rad^2;
+	var dfs=4*y+6;
+	var dfd=4*x+4*y+10;
+	while(x+y<=0)
+	{
+		ctx.fillRect(Scale*(x0+x), Scale*(y0-y), Scale*1, Scale*1);
+		ctx.fillRect(Scale*(x0+x), Scale*(y0+y), Scale*1, Scale*1);
+		ctx.fillRect(Scale*(x0-x), Scale*(y0-y), Scale*1, Scale*1);
+		ctx.fillRect(Scale*(x0-x), Scale*(y0+y), Scale*1, Scale*1);
+		ctx.fillRect(Scale*(x0+y), Scale*(y0-x), Scale*1, Scale*1);
+		ctx.fillRect(Scale*(x0+y), Scale*(y0+x), Scale*1, Scale*1);
+		ctx.fillRect(Scale*(x0-y), Scale*(y0-x), Scale*1, Scale*1);
+		ctx.fillRect(Scale*(x0-y), Scale*(y0+x), Scale*1, Scale*1); 
+		if( F>0 )
+		{
+			F+=dfd;
+			dfs+=4;
+			dfd+=8;
+			x++;
+			y++;
+		}
+		else 
+		{
+			F+=dfs;
+			dfs+=4;
+			dfd+=4;
+			y++;
+		}
+	}
+
+</script>
+</canvas>
+</body>
+</html>
